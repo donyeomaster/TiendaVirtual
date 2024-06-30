@@ -7,6 +7,12 @@ const thumbs = producto.querySelector('.producto__thumbs');
 // color
 const propiedadColor = producto.querySelector('#propiedad-color');
 
+// cantidad
+const btnIncrementarCantidad = producto.querySelector('#incrementar-cantidad');
+const btnDisminuirCantidad = producto.querySelector('#disminuir-cantidad');
+const inputCantidad = producto.querySelector('#cantidad');
+
+
 // funcionalida de las thumbnails
 thumbs.addEventListener('click', (e) => {
     if(e.target.tagName === 'IMG') {
@@ -32,4 +38,14 @@ propiedadColor.addEventListener('click', (e) =>{
 
     }
     
+});
+
+// botones + -
+btnIncrementarCantidad.addEventListener('click', (e) => {
+    inputCantidad.value = parseInt(inputCantidad.value) + 1;
+});
+
+btnDisminuirCantidad.addEventListener('click', (e) => {
+    if(parseInt(inputCantidad.value) > 1)
+    inputCantidad.value = parseInt(inputCantidad.value) - 1;
 });
