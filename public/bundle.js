@@ -50,6 +50,19 @@ btnDisminuirCantidad.addEventListener('click', (e) => {
     inputCantidad.value = parseInt(inputCantidad.value) - 1;
 });
 
+var data = {
+  productos: [
+    {
+      id: '1',
+      nombre: "Tennis Converse Standard",
+      precio: 500.0,
+      descrpcion: "tennis converse1",
+      colores: ["negro", "rojo", "amarillo"],
+      tamaños: ["1.5", "2", "2.5", "2.5", "3", "4"],
+    },
+  ],
+};
+
 // botones para acceder al carrito
 const botonesAbrirCarrito = document.querySelectorAll(
   '[data-accion="abrir-carrito"]'
@@ -61,23 +74,38 @@ const ventanaCarrito = document.getElementById("carrito");
 const btnAgregarCarrito = document.getElementById("agregar-al-carrito");
 const producto = document.getElementById("producto");
 const carrito = [];
+const formatearMoneda = new Intl.NumberFormat("es-CO", {
+  style: "currency",
+  currency: "COP",
+});
 
 //funcion externa xq la quiero usar en varias partes. Renderizado del carrito (Calcular productos)
 const renderCarrito = () => {
   ventanaCarrito.classList.add("carrito--active");
 
-  const productosAnteriores = ventanaCarrito.querySelectorAll('.carrito__producto');
+  // eliminamos todos los productos anteriores para que no se repita
+  const productosAnteriores =
+    ventanaCarrito.querySelectorAll(".carrito__producto");
   productosAnteriores.forEach((productoAnterior) => {
     productoAnterior.remove();
   });
 
+  // iterar sobre cada producto y los mostramos
   carrito.forEach((productoCarrito) => {
+    // obtener el precio de la BD simulada
+    // cuando el id  del item del carrito = sea igual que el de la lista
+    data.productos.forEach((productoBaseDatos) => {
+      if (productoBaseDatos.id === productoCarrito.id) {
+        productoCarrito.precio = productoBaseDatos.precio;
+      }
+    });
+
     //ruta de la imagen
-    let thumbSrc = producto.querySelectorAll('.producto__thumb-img')[0].src;
-    if (productoCarrito.color === 'rojo'){
-        thumbSrc = './img/thumbs/rojo.jpg';
-    } else if(productoCarrito.color === 'amarillo') {
-        thumbSrc = './img/thumbs/amarillo.jpg';
+    let thumbSrc = producto.querySelectorAll(".producto__thumb-img")[0].src;
+    if (productoCarrito.color === "rojo") {
+      thumbSrc = "./img/thumbs/rojo.jpg";
+    } else if (productoCarrito.color === "amarillo") {
+      thumbSrc = "./img/thumbs/amarillo.jpg";
     }
 
     // Se creo una palntilla del codigo HTML
@@ -86,10 +114,14 @@ const renderCarrito = () => {
 								<img src="${thumbSrc}" alt="" class="carrito__thumb" />
 								<div>
 									<p class="carrito__producto-nombre">
-										<span class="carrito__producto-cantidad">${productoCarrito.cantidad} x </span>${productoCarrito.nombre}
+										<span class="carrito__producto-cantidad">${productoCarrito.cantidad} x </span>${
+      productoCarrito.nombre
+    }
 									</p>
 									<p class="carrito__producto-propiedades">
-										Tamaño:<span>${productoCarrito.tamaño}</span> Color:<span>${productoCarrito.color}</span>
+										Tamaño:<span>${productoCarrito.tamaño}</span> Color:<span>${
+      productoCarrito.color
+    }</span>
 									</p>
 								</div>
 							</div>
@@ -107,7 +139,9 @@ const renderCarrito = () => {
 										/>
 									</svg>
 								</button>
-								<p class="carrito__producto-precio">$500.00</p>
+								<p class="carrito__producto-precio">${formatearMoneda.format(
+                  productoCarrito.precio * productoCarrito.cantidad
+                )}</p>
 							</div>
         `;
 
