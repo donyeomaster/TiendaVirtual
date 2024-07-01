@@ -119,14 +119,34 @@ btnAgregarCarrito.addEventListener("click", (e) => {
     "#propiedad-tamaño input:checked"
   ).value;
 
-  //console.log(id, nombre, cantidad, color, tamaño);
-  carrito.push({
-    id: id,
-    nombre: nombre,
-    cantidad: cantidad,
-    color: color,
-    tamaño: tamaño,
-  });
-});
+  // suma propductos similares
+  if (carrito.length > 0) {
+    let ProductoEnCarrito = false;
 
-// Mostrar productos en el carrito
+    carrito.forEach(item => {
+        if(item.id === id && item.nombre === nombre && item.color === color && item.tamaño === tamaño){
+            item.cantidad += cantidad;
+            ProductoEnCarrito = true;
+        }
+    });
+    if(!ProductoEnCarrito){ 
+        carrito.push({
+            id: id,
+            nombre: nombre,
+            cantidad: cantidad,
+            color: color,
+            tamaño: tamaño,
+        });
+    }
+
+  } else {
+    //console.log(id, nombre, cantidad, color, tamaño);
+    carrito.push({
+      id: id,
+      nombre: nombre,
+      cantidad: cantidad,
+      color: color,
+      tamaño: tamaño,
+    });
+  }
+});
