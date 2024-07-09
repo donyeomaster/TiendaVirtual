@@ -73,7 +73,7 @@ const botonesCerrarCarrito = document.querySelectorAll(
 const ventanaCarrito = document.getElementById("carrito");
 const btnAgregarCarrito = document.getElementById("agregar-al-carrito");
 const producto = document.getElementById("producto");
-const carrito = [];
+let carrito = [];
 const formatearMoneda = new Intl.NumberFormat("es-CO", {
   style: "currency",
   currency: "COP",
@@ -183,26 +183,49 @@ btnAgregarCarrito.addEventListener("click", (e) => {
     "#propiedad-tamaño input:checked"
   ).value;
 
+  //boton eliminar del carrito
+  ventanaCarrito.addEventListener("click", (e) => {
+    if (
+      e.target.closest("button")?.dataset.accion === "eliminar-item-carrito") {
+      const producto = e.target.closest(".carrito__producto");
+      const indexProducto = [
+        ...ventanaCarrito.querySelectorAll(".carrito__producto"),
+      ].indexOf(producto);
+
+      carrito = carrito.filter((item, index) => {
+        if (index !== indexProducto) {
+          return item;
+        }
+      });
+
+      renderCarrito();
+    }
+  });
+
   // suma propductos similares
   if (carrito.length > 0) {
     let ProductoEnCarrito = false;
 
-    carrito.forEach(item => {
-        if(item.id === id && item.nombre === nombre && item.color === color && item.tamaño === tamaño){
-            item.cantidad += cantidad;
-            ProductoEnCarrito = true;
-        }
+    carrito.forEach((item) => {
+      if (
+        item.id === id &&
+        item.nombre === nombre &&
+        item.color === color &&
+        item.tamaño === tamaño
+      ) {
+        item.cantidad += cantidad;
+        ProductoEnCarrito = true;
+      }
     });
-    if(!ProductoEnCarrito){ 
-        carrito.push({
-            id: id,
-            nombre: nombre,
-            cantidad: cantidad,
-            color: color,
-            tamaño: tamaño,
-        });
+    if (!ProductoEnCarrito) {
+      carrito.push({
+        id: id,
+        nombre: nombre,
+        cantidad: cantidad,
+        color: color,
+        tamaño: tamaño,
+      });
     }
-
   } else {
     //console.log(id, nombre, cantidad, color, tamaño);
     carrito.push({
